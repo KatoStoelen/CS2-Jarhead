@@ -1,6 +1,8 @@
-# A bot template for [`python-sc2`](https://github.com/Dentosal/python-sc2)
+# SC2 bot template
 
-Used by [Dentosal/sc2-bot-match-runner](https://github.com/Dentosal/sc2-bot-match-runner)
+Forked from [Dentosal](https://github.com/Dentosal/python-sc2-bot-template)
+
+Used by [sc2-bot-match-runner](https://gitlab.com/geek-retreat/sc2-bot-match-runner)
 
 ## Setup
 
