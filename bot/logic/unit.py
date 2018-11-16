@@ -8,24 +8,24 @@ class UnitController:
     def __init__(self):
         self.attack_groups = set()
 
-    async def on_step(self, bot: sc2.BotAI):
-        await self.all_out_attack(bot)
-        await self.group_idle_marines(bot)
-        await self.collect_with_scv(bot)
-        await self.attack_with_marines(bot)
+    async def on_step(self, bot: sc2.BotAI, iteration: int):
+        await self.__all_out_attack(bot)
+        await self.__group_idle_marines(bot, iteration)
+        await self.__collect_with_scv(bot)
+        await self.__attack_with_marines(bot)
 
-    async def collect_with_scv(self, bot: sc2.BotAI):
+    async def __collect_with_scv(self, bot: sc2.BotAI):
         # collect with SCV
         for scv in bot.units(UnitTypeId.SCV).idle:
             await bot.do(scv.gather(bot.state.mineral_field.closest_to(bot.cc)))
 
-    async def group_idle_marines(self, bot: sc2.BotAI):
+    async def __group_idle_marines(self, bot: sc2.BotAI, iteration: int):
         # group the marines, so they attack together
-        if bot.units(UnitTypeId.MARINE).idle.amount > 15 and bot.iteration % 50 == 1:
+        if bot.units(UnitTypeId.MARINE).idle.amount > 15 and iteration % 50 == 1:
             cg = ControlGroup(bot.units(UnitTypeId.MARINE).idle)
             self.attack_groups.add(cg)
 
-    async def attack_with_marines(self, bot: sc2.BotAI):
+    async def __attack_with_marines(self, bot: sc2.BotAI):
         # attack with marines
         for ac in list(self.attack_groups):
             alive_units = ac.select_units(bot.units)
@@ -37,7 +37,7 @@ class UnitController:
             else:
                 self.attack_groups.remove(ac)
 
-    async def all_out_attack(self, bot: sc2.BotAI):
+    async def __all_out_attack(self, bot: sc2.BotAI):
         # if command center is missing, all out attack
         if not bot.units(UnitTypeId.COMMANDCENTER).exists:
             target = bot.known_enemy_structures.random_or(
