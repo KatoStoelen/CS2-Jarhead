@@ -12,18 +12,18 @@ class Builder:
 
     async def __build_supplydepot(self, bot: sc2.BotAI):
         # build supply depot
-        if bot.time > 240:
-            if bot.supply_left < (2 if bot.units(UnitTypeId.BARRACKS).amount < 3 else 4):
-                if bot.can_afford(UnitTypeId.SUPPLYDEPOT) and bot.already_pending(UnitTypeId.SUPPLYDEPOT) < 2:
-                    await bot.build(UnitTypeId.SUPPLYDEPOT, near=bot.cc.position.towards(bot.game_info.map_center, 5))
+        if bot.supply_left < (2 if bot.units(UnitTypeId.BARRACKS).amount < 3 else 4):
+            if bot.can_afford(UnitTypeId.SUPPLYDEPOT) and bot.already_pending(UnitTypeId.SUPPLYDEPOT) < 2:
+                await bot.build(UnitTypeId.SUPPLYDEPOT, near=bot.cc.position.towards(bot.game_info.map_center, 5))
 
     async def __build_barracks(self, bot: sc2.BotAI):
         # build barracks
-        if bot.units(UnitTypeId.BARRACKS).amount < 3 or (bot.minerals > 400 and bot.units(UnitTypeId.BARRACKS).amount < 5):
-            if bot.can_afford(UnitTypeId.BARRACKS):
-                p = bot.game_info.map_center.towards(
-                    bot.enemy_start_locations[0], 25)
-                await bot.build(UnitTypeId.BARRACKS, near=p)
+        if bot.time > 240:
+            if bot.units(UnitTypeId.BARRACKS).amount < 3 or (bot.minerals > 400 and bot.units(UnitTypeId.BARRACKS).amount < 5):
+                if bot.can_afford(UnitTypeId.BARRACKS):
+                    p = bot.game_info.map_center.towards(
+                        bot.enemy_start_locations[0], 25)
+                    await bot.build(UnitTypeId.BARRACKS, near=p)
 
     async def __build_chokepoint_bunker(self, bot: sc2.BotAI):
         # build bunker at base choke point
