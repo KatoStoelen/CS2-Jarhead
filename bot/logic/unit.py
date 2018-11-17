@@ -46,7 +46,7 @@ class UnitController:
 
     async def __all_out_attack(self, bot: sc2.BotAI):
         # if command center is missing, all out attack
-        if bot.time > 360:
+        if bot.time > 480:
             target = bot.known_enemy_structures.random_or(
                 bot.enemy_start_locations[0]).position
             for unit in bot.workers | bot.units(UnitTypeId.MARINE) | bot.units(UnitTypeId.MARAUDER) | bot.units(UnitTypeId.SIEGETANK):

@@ -15,6 +15,6 @@ class MyBot(sc2.BotAI):
             self.cc = self.units(UnitTypeId.COMMANDCENTER).first
 
         await self.unitController.on_step(self, iteration)
-        await self.trainer.on_step(self, iteration)
         await self.builder.on_step(self, iteration)
+        await self.trainer.on_step(self, iteration)
         await self.chatter.on_step(self, iteration)
