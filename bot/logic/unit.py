@@ -10,10 +10,9 @@ class UnitController:
         self.attack_groups = set()
 
     async def on_step(self, bot: sc2.BotAI, iteration: int):
-        await self.__all_out_attack(bot)
-        # await self.__group_idle_marines(bot, iteration)
+        await self.__group_idle_units(bot)
+        await self.__attack(bot)
         await self.__collect_with_scv(bot)
-        # await self.__attack_with_marines(bot)
 
     async def __collect_with_scv(self, bot: sc2.BotAI):
         # collect with SCV
@@ -26,14 +25,17 @@ class UnitController:
                 if w.exists:
                     await bot.do(w.random.gather(a))
 
-    async def __group_idle_marines(self, bot: sc2.BotAI, iteration: int):
-        # group the marines, so they attack together
-        if bot.units(UnitTypeId.MARINE).idle.amount > 15 and iteration % 50 == 1:
-            cg = ControlGroup(bot.units(UnitTypeId.MARINE).idle)
-            self.attack_groups.add(cg)
+    async def __group_idle_units(self, bot: sc2.BotAI):
+        if bot.time > 480:
+            idle_units = bot.units(UnitTypeId.MARINE).idle | bot.units(UnitTypeId.REAPER).idle
 
-    async def __attack_with_marines(self, bot: sc2.BotAI):
-        # attack with marines
+            if not bot.cc:
+                idle_units = idle_units | bot.workers
+
+            if idle_units.amount > 20:
+                self.attack_groups.add(ControlGroup(idle_units))
+
+    async def __attack(self, bot: sc2.BotAI):
         for ac in list(self.attack_groups):
             alive_units = ac.select_units(bot.units)
             if alive_units.exists and alive_units.idle.exists:
@@ -44,17 +46,4 @@ class UnitController:
             else:
                 self.attack_groups.remove(ac)
 
-    async def __all_out_attack(self, bot: sc2.BotAI):
-        # if command center is missing, all out attack
-        if bot.time > 480:
-            target = bot.known_enemy_structures.random_or(
-                bot.enemy_start_locations[0]).position
-            for unit in bot.workers | bot.units(UnitTypeId.MARINE) | bot.units(UnitTypeId.MARAUDER) | bot.units(UnitTypeId.SIEGETANK):
-                await bot.do(unit.attack(target))
-
-    async def __worker_defence(self, bot: sc2.BotAI):
-        
-        target = bot.known_enemy_structures.random_or(bot.enemy_start_locations[0]).position
-        for unit in bot.workers:
-            await bot.do(unit.attack(target))
 
