@@ -11,21 +11,20 @@ class Builder:
 
     async def __build_supplydepot(self, bot: sc2.BotAI):
         # build supply depot
-        if bot.units(UnitTypeId.SUPPLYDEPOT).amount >= 3:
-            if bot.supply_left < (2 if bot.units(UnitTypeId.BARRACKS).amount < 3 else 4):
-                if bot.can_afford(UnitTypeId.SUPPLYDEPOT) and bot.already_pending(UnitTypeId.SUPPLYDEPOT) < 2:
-                    await bot.build(UnitTypeId.SUPPLYDEPOT, near=bot.cc.position.random_on_distance(15))
+        if bot.supply_left < (2 if bot.units(UnitTypeId.BARRACKS).amount < 3 else 4):
+            if bot.can_afford(UnitTypeId.SUPPLYDEPOT) and bot.already_pending(UnitTypeId.SUPPLYDEPOT) < 2:
+                await bot.build(UnitTypeId.SUPPLYDEPOT, near=bot.cc.position.random_on_distance(10))
 
     async def __build_barracks(self, bot: sc2.BotAI):
         # build barracks
         if bot.units(UnitTypeId.BARRACKS).amount < 3:
             if bot.can_afford(UnitTypeId.BARRACKS):
-                await bot.build(UnitTypeId.BARRACKS, near=bot.cc.position.random_on_distance(15))
+                await bot.build(UnitTypeId.BARRACKS, near=bot.main_base_ramp.top_center.random_on_distance(5))
 
     async def __build_factory(self, bot: sc2.BotAI):
         if bot.units(UnitTypeId.FACTORY).amount < 2:
             if bot.can_afford(UnitTypeId.FACTORY):
-                await bot.build(UnitTypeId.FACTORY, near=bot.cc.position.random_on_distance(15))
+                await bot.build(UnitTypeId.FACTORY, near=bot.main_base_ramp.top_center.random_on_distance(5))
 
     async def __build_refinery(self, bot: sc2.BotAI):
         if bot.units(UnitTypeId.REFINERY).amount < 2:

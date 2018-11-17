@@ -5,6 +5,7 @@ from sc2.ids.unit_typeid import UnitTypeId
 class Trainer:
     async def on_step(self, bot: sc2.BotAI, iteration: int):
         await self.__train_scv(bot)
+        await self.__train_siegetank(bot)
         await self.__train_marines(bot)
         await self.__train_base_marines(bot)
         await self.__train_marauder(bot)
