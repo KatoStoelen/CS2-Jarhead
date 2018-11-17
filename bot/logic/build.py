@@ -6,6 +6,7 @@ class Builder:
     async def on_step(self, bot: sc2.BotAI, iteration: int):
         await self.__build_supplydepot(bot)
         await self.__build_base_barracks(bot)
+        await self.__build_refinery(bot)
         await self.__build_chokepoint_bunker(bot)
         await self.__build_engineering_bay(bot)
         await self.__build_barracks(bot)
@@ -40,7 +41,22 @@ class Builder:
         if bot.units(UnitTypeId.ENGINEERINGBAY).amount == 0:
             if bot.can_afford(UnitTypeId.ENGINEERINGBAY) and bot.already_pending(UnitTypeId.ENGINEERINGBAY) == 0:
                 await bot.build(UnitTypeId.ENGINEERINGBAY, bot.cc.position.towards(bot.game_info.map_center, 5))
+    
+    async def __build_refinery(self, bot: sc2.BotAI):
+        if bot.units(UnitTypeId.REFINERY).amount < 2:
+                if bot.can_afford(UnitTypeId.REFINERY):
+                    vgs = bot.state.vespene_geyser.closer_than(20.0, bot.cc)
+                    for vg in vgs:
+                        if bot.units(UnitTypeId.REFINERY).closer_than(1.0, vg).exists:
+                            break
+
+                        worker = bot.select_build_worker(vg.position)
+                        if worker is None:
+                            break
+
+                        await bot.do(worker.build(UnitTypeId.REFINERY, vg))
+                        break
+            
 
     # async def __build_chokepoint_missile_turret(self, bot: sc2.BotAI):
     #     if bot.units(UnitTypeId.MISSILETURRET).closer_than(5, bot.main_base_ramp.top_center).amount == 0:
-
