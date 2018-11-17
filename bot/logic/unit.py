@@ -44,3 +44,13 @@ class UnitController:
                 bot.enemy_start_locations[0]).position
             for unit in bot.workers | bot.units(UnitTypeId.MARINE):
                 await bot.do(unit.attack(target))
+
+
+    # async def __run_away(self, bot: sc2.BotAI, iteration: int):
+    #     if (iteration == 1):
+    #         bot.units(UnitTypeId.SCV).first.move()
+
+    # async def __put_marines_in_bunker(self, bot: sc2.BotAI):
+    #     if bot.units(UnitTypeId.BUNKER).amount > 0:
+    #         for marine in bot.units(UnitTypeId.MARINE).closer_than(25, bot.cc.position)
+    #             marine.
