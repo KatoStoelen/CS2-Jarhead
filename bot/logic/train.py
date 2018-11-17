@@ -11,7 +11,7 @@ class Trainer:
 
     async def __train_scv(self, bot: sc2.BotAI):
         # train SCVs
-        if bot.can_afford(UnitTypeId.SCV) and bot.workers.amount < 16 and bot.cc.noqueue:
+        if bot.can_afford(UnitTypeId.SCV) and bot.workers.amount < 20 and bot.cc.noqueue:
             await bot.do(bot.cc.train(UnitTypeId.SCV))
 
     async def __train_marines(self, bot: sc2.BotAI):
@@ -31,7 +31,7 @@ class Trainer:
                     await bot.do(rax.train(UnitTypeId.MARINE))
     
     async def __train_marauder(self, bot: sc2.BotAI):
-        if bot.units(UnitTypeId.MARINE).amount % 10 == 1:
+        if bot.units(UnitTypeId.MARINE).amount % 5 == 1:
             for rax in bot.units(UnitTypeId.BARRACKS).ready.noqueue:
                 if not bot.can_afford(UnitTypeId.MARAUDER):
                     break

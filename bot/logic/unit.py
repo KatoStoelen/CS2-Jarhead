@@ -18,6 +18,12 @@ class UnitController:
         # collect with SCV
         for scv in bot.units(UnitTypeId.SCV).idle:
             await bot.do(scv.gather(bot.state.mineral_field.closest_to(bot.cc)))
+        
+        for a in bot.units(UnitTypeId.REFINERY):
+            if a.assigned_harvesters < a.ideal_harvesters:
+                w = bot.workers.closer_than(20, a)
+                if w.exists:
+                    await bot.do(w.random.gather(a))
 
     async def __group_idle_marines(self, bot: sc2.BotAI, iteration: int):
         # group the marines, so they attack together
@@ -45,6 +51,11 @@ class UnitController:
             for unit in bot.workers | bot.units(UnitTypeId.MARINE):
                 await bot.do(unit.attack(target))
 
+    async def __worker_defence(self, bot: sc2.BotAI):
+        
+        target = bot.known_enemy_structures.random_or(bot.enemy_start_locations[0]).position
+        for unit in bot.workers:
+            await bot.do(unit.attack(target))
 
     # async def __run_away(self, bot: sc2.BotAI, iteration: int):
     #     if (iteration == 1):
