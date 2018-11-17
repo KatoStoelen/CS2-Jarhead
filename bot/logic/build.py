@@ -12,9 +12,10 @@ class Builder:
 
     async def __build_supplydepot(self, bot: sc2.BotAI):
         # build supply depot
-        if bot.supply_left < (2 if bot.units(UnitTypeId.BARRACKS).amount < 3 else 4):
-            if bot.can_afford(UnitTypeId.SUPPLYDEPOT) and bot.already_pending(UnitTypeId.SUPPLYDEPOT) < 2:
-                await bot.build(UnitTypeId.SUPPLYDEPOT, near=bot.cc.position.towards(bot.game_info.map_center, 5))
+        if bot.time > 240:
+            if bot.supply_left < (2 if bot.units(UnitTypeId.BARRACKS).amount < 3 else 4):
+                if bot.can_afford(UnitTypeId.SUPPLYDEPOT) and bot.already_pending(UnitTypeId.SUPPLYDEPOT) < 2:
+                    await bot.build(UnitTypeId.SUPPLYDEPOT, near=bot.cc.position.towards(bot.game_info.map_center, 5))
 
     async def __build_barracks(self, bot: sc2.BotAI):
         # build barracks
@@ -33,7 +34,7 @@ class Builder:
     async def __build_base_barracks(self, bot: sc2.BotAI):
         if bot.units(UnitTypeId.BARRACKS).closer_than(10, bot.main_base_ramp.top_center).amount == 0:
             if bot.can_afford(UnitTypeId.BARRACKS) and bot.already_pending(UnitTypeId.BARRACKS) == 0:
-                await bot.build(UnitTypeId.BARRACKS, bot.main_base_ramp.top_center.towards(bot.cc.position, 5))
+                await bot.build(UnitTypeId.BARRACKS, bot.main_base_ramp.top_center.towards(bot.cc.position, 10))
 
     async def __build_engineering_bay(self, bot: sc2.BotAI):
         if bot.units(UnitTypeId.ENGINEERINGBAY).amount == 0:
@@ -41,4 +42,5 @@ class Builder:
                 await bot.build(UnitTypeId.ENGINEERINGBAY, bot.cc.position.towards(bot.game_info.map_center, 5))
 
     # async def __build_chokepoint_missile_turret(self, bot: sc2.BotAI):
-    #     if bot.units(UnitTypeId.MISSILETURRET).closer_than
+    #     if bot.units(UnitTypeId.MISSILETURRET).closer_than(5, bot.main_base_ramp.top_center).amount == 0:
+
