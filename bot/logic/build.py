@@ -17,7 +17,7 @@ class Builder:
                 await bot.build(UnitTypeId.SUPPLYDEPOT, near=bot.cc.position.random_on_distance(5))
 
     async def __build_barracks(self, bot: sc2.BotAI):
-        if bot.units(UnitTypeId.BARRACKS).amount < 3:
+        if bot.units(UnitTypeId.BARRACKS).amount < 5:
             if bot.can_afford(UnitTypeId.BARRACKS):
                 await bot.build(UnitTypeId.BARRACKS, near=bot.main_base_ramp.top_center.towards(bot.cc, 8).random_on_distance(3))
 
