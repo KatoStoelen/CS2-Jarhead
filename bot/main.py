@@ -11,7 +11,6 @@ class MyBot(sc2.BotAI):
         self.chatter = Chatter()
 
     async def on_step(self, iteration):
-        self.iteration = iteration
         if self.units(UnitTypeId.COMMANDCENTER).exists:
             self.cc = self.units(UnitTypeId.COMMANDCENTER).first
 
