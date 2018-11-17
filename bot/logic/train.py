@@ -7,8 +7,7 @@ class Trainer:
         await self.__train_scv(bot)
         await self.__train_siegetank(bot)
         await self.__train_marines(bot)
-        await self.__train_base_marines(bot)
-        await self.__train_marauder(bot)
+        await self.__train_reapers(bot)
 
     async def __train_scv(self, bot: sc2.BotAI):
         # train SCVs
@@ -17,32 +16,23 @@ class Trainer:
 
     async def __train_marines(self, bot: sc2.BotAI):
         # train marines
-        for rax in bot.units(UnitTypeId.BARRACKS).ready.noqueue:
-            if not bot.can_afford(UnitTypeId.MARINE):
-                break
-            await bot.do(rax.train(UnitTypeId.MARINE))
-
+        if bot.units(UnitTypeId.MARINE).amount < 10 or bot.units(UnitTypeId.MARINE).amount < bot.units(UnitTypeId.REAPER).amount*5:
+            for rax in bot.units(UnitTypeId.BARRACKS).ready.noqueue:
+                if not bot.can_afford(UnitTypeId.MARINE):
+                    break
+                await bot.do(rax.train(UnitTypeId.MARINE))
+            
     async def __train_siegetank(self, bot: sc2.BotAI):
         for fact in bot.units(UnitTypeId.FACTORY).ready.noqueue:
             if not bot.can_afford(UnitTypeId.SIEGETANK):
                 break
             await bot.do(fact.train(UnitTypeId.SIEGETANK))
     
-    async def __train_base_marines(self, bot: sc2.BotAI):
-        base_bunkers = bot.units(UnitTypeId.BUNKER).closer_than(15, bot.main_base_ramp.top_center)
-        for bunker in base_bunkers:
-            if bunker.cargo_used < bunker.cargo_max:
-                for rax in bot.units(UnitTypeId.BARRACKS).closer_than(15, bot.main_base_ramp.top_center).ready.noqueue:
-                    if not bot.can_afford(UnitTypeId.MARINE):
-                        return
-                    await bot.do(rax.train(UnitTypeId.MARINE))
-    
-    async def __train_marauder(self, bot: sc2.BotAI):
-        if bot.units(UnitTypeId.MARINE).amount % 5 == 1:
-            for rax in bot.units(UnitTypeId.BARRACKS).ready.noqueue:
-                if not bot.can_afford(UnitTypeId.MARAUDER):
-                    break
-                await bot.do(rax.train(UnitTypeId.MARAUDER))
+    async def __train_reapers(self, bot: sc2.BotAI):
+        for rax in bot.units(UnitTypeId.BARRACKS).ready.noqueue:
+            if not bot.can_afford(UnitTypeId.REAPER):
+                break
+            await bot.do(rax.train(UnitTypeId.REAPER))
 
 
 
