@@ -16,10 +16,16 @@ class Trainer:
 
     async def __train_marines(self, bot: sc2.BotAI):
         # train marines
-        for rax in bot.units(UnitTypeId.BARRACKS).closer_than(25, bot.game_info.map_center.towards(bot.enemy_start_locations[0],25)).ready.noqueue:
+        for rax in bot.units(UnitTypeId.BARRACKS).ready.noqueue:
             if not bot.can_afford(UnitTypeId.MARINE):
                 break
             await bot.do(rax.train(UnitTypeId.MARINE))
+
+    async def __train_siegetank(self, bot: sc2.BotAI):
+        for fact in bot.units(UnitTypeId.FACTORY).ready.noqueue:
+            if not bot.can_afford(UnitTypeId.SIEGETANK):
+                break
+            await bot.do(fact.train(UnitTypeId.SIEGETANK))
     
     async def __train_base_marines(self, bot: sc2.BotAI):
         base_bunkers = bot.units(UnitTypeId.BUNKER).closer_than(15, bot.main_base_ramp.top_center)

@@ -1,6 +1,7 @@
 import random
 import sc2
 from sc2.ids.unit_typeid import UnitTypeId
+from sc2.ids.ability_id import AbilityId
 from sc2.helpers import ControlGroup
 
 
@@ -10,9 +11,9 @@ class UnitController:
 
     async def on_step(self, bot: sc2.BotAI, iteration: int):
         await self.__all_out_attack(bot)
-        await self.__group_idle_marines(bot, iteration)
+        # await self.__group_idle_marines(bot, iteration)
         await self.__collect_with_scv(bot)
-        await self.__attack_with_marines(bot)
+        # await self.__attack_with_marines(bot)
 
     async def __collect_with_scv(self, bot: sc2.BotAI):
         # collect with SCV
@@ -45,10 +46,10 @@ class UnitController:
 
     async def __all_out_attack(self, bot: sc2.BotAI):
         # if command center is missing, all out attack
-        if not bot.units(UnitTypeId.COMMANDCENTER).exists:
+        if bot.time > 360:
             target = bot.known_enemy_structures.random_or(
                 bot.enemy_start_locations[0]).position
-            for unit in bot.workers | bot.units(UnitTypeId.MARINE):
+            for unit in bot.workers | bot.units(UnitTypeId.MARINE) | bot.units(UnitTypeId.MARAUDER) | bot.units(UnitTypeId.SIEGETANK):
                 await bot.do(unit.attack(target))
 
     async def __worker_defence(self, bot: sc2.BotAI):
@@ -57,11 +58,3 @@ class UnitController:
         for unit in bot.workers:
             await bot.do(unit.attack(target))
 
-    # async def __run_away(self, bot: sc2.BotAI, iteration: int):
-    #     if (iteration == 1):
-    #         bot.units(UnitTypeId.SCV).first.move()
-
-    # async def __put_marines_in_bunker(self, bot: sc2.BotAI):
-    #     if bot.units(UnitTypeId.BUNKER).amount > 0:
-    #         for marine in bot.units(UnitTypeId.MARINE).closer_than(25, bot.cc.position)
-    #             marine.
